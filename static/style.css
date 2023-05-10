@@ -1,0 +1,42 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    max-width: 600px;
+    /* Adjust the max-width value as needed */
+    margin: 0 auto;
+    /* Center the content horizontally */
+}
+
+.form-group {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    /* Align items to the left */
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.form-group label {
+    margin-right: 10px;
+    text-align: left;
+}
+
+.form-group input[type="text"] {
+    text-align: left;
+}
+
+.form-group input[type="number"] {
+    flex: 0.1;
+    text-align: right;
+    margin-left: auto;
+    /* Align the input boxes to the right within the form-group */
+}
+
+/* Additional style for the form itself */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    /* Align the form to the left within the body */
+    margin: 0;
+    padding: 0px;
+}
