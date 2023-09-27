@@ -12,9 +12,12 @@
     <h1>&#119070 Getting jiggy with it &#x266a</h1>
 
     <div class="form-group">
-        <label for="jig">Jig:</label>
+        <label for="jig">Choose your own adventure:</label>
+
+        <br>
+
         <select id="jig" name="jig">
-            <option value="" selected disabled>Select Jig</option>
+            <option value="" selected disabled>Select player</option>
             {% for option in jigs %}
             <option value="{{ option }}">{{ option }}</option>
             {% endfor %}
@@ -28,14 +31,14 @@
             <br>
             <br>
 
-            <label for="duration">Duration [us]:</label>
-            <input type="number" id="duration" name="duration" onkeyup="saveValue(this)" ;>
-
-            <br>
-            <br>
-
             <label for="delay">Delay [us]:</label>
             <input type="number" id="delay" name="delay" onkeyup="saveValue(this)" ;>
+
+            <br>
+            <br>
+
+            <label for="duration">Duration [us]:</label>
+            <input type="number" id="duration" name="duration" onkeyup="saveValue(this)" ;>
 
             <br>
             <br>
@@ -47,13 +50,12 @@
             <br>
 
             <label for="voltage_range">Voltage range [V]:</label>
-            <input type="number" id="voltage_range" name="voltage_range" onkeyup="saveValue(this)" ;>
+            <input type="number" :focus id="voltage_range" name="voltage_range" onkeyup="saveValue(this)" ;>
             <br>
             <br>
 
-            <label for="interval">Interval [s]:</label>
-            <input type="number" id="interval" name="interval" onkeyup=" saveValue(this)" ;>
-
+            <label for="gain_dB">Gain [dB]:</label>
+            <input type="number" id="dain_dB" name="gain_dB" onkeyup="saveValue(this)" ;>
             <br>
             <br>
 
@@ -71,10 +73,12 @@
         <br>
 
         <button type="submit" id="pulse">Send a single pulse</button>
-        <button type="submit" id="start">Start experiment</button>
-        <button type="submit" id="kill">Kill experiment</button>
+        <br>
 
-    </div>
+        <button type="submit" id="start">Start experiment</button>
+        <br>
+
+        <button type="submit" id="kill">Kill experiment</button>
 
     </form>
 
@@ -88,7 +92,9 @@
     </div>
 
     <script src="/static/script.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
 </body>
+
+
 
 </html>

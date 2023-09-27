@@ -1,67 +1,77 @@
-from dataclasses import dataclass
 import json
 import logging
 
-from flask import Flask, request, render_template, jsonify
+from flask import Flask, request, render_template
 import requests
 
-import config
-import utils
+NETWORK_IP = '0.0.0'
+
+with open('docker.json', 'r') as json_file:
+    containers = json.load(json_file)
 
 
-@dataclass
-class Server:
-    zerotier_base_ip: str
-    local_ip: str
-    port: int
-    remote_ip_endings: list[int]
-    controller_port: int
+def make_ip(ip_ending) -> str:
+    return f'{NETWORK_IP}.{ip_ending}'
 
 
-server: Server = utils.dataclass_from_dict(dataclass_=Server, dict_=config.config)
+HOST = make_ip(ip_ending=containers['unplugged']['ip'])
+PORT = containers['unplugged']['port']
+URL = f"http://10.251.67.179:{containers['remotecontrol']['port']}"
+
+JIGS = (
+    'pikachu',
+    'snorlax',
+    'charmander',
+    'bulbasaur',
+    'clefairy'
+)
+
 app = Flask(__name__)
 
 
-def make_url(ip_ending: str, endpoint: str) -> str:
-    return f'http://{server.zerotier_base_ip}.{ip_ending}:{server.controller_port}/{endpoint}'
+def make_url(endpoint: str) -> str:
+    return f'{URL}/{endpoint}'
 
 
 def execute(endpoint: str):
     exp_params: dict = request.get_json()
     logging.info(exp_params)
-    url = make_url(ip_ending=config.machines[exp_params['jig']], endpoint=endpoint)
-    print(exp_params)
-    print(url)
-    response = requests.post(url=url, data=exp_params).text
-    
-    return response
+    url = make_url(endpoint=endpoint)
+
+    return requests.post(url=url, data=exp_params).text
 
 
 @app.route('/')
 def index():
-    return render_template('index.html', jigs=config.machines.keys())
+    return render_template('index.html', jigs=JIGS)
 
 
 @app.route('/pulse', methods=['POST'])
-def get_wave():
-    return execute(endpoint=config.endpoints['single pulse'])
+def pulse():
+    return execute(endpoint='pulser')
 
 
 @app.route('/start', methods=['POST'])
-def calculate():
-    return execute(endpoint=config.endpoints['run experiment'])
+def start():
+    return execute(endpoint='start')
 
 
 @app.route('/status', methods=['POST'])
 def status():
     jig = request.get_json()
-    url = make_url(
-        ip_ending=config.machines[jig],
-        endpoint=config.endpoints['get jig status']
-    )
-    response = requests.get(url=url).text
-    return json.dumps({'status': config.jig_status[response]})
+    print(jig)
+    response = requests.post(url=URL, data=jig).text
+    
+    return json.dumps({'status': response})
+
+
+@app.route('/stop', methods=['POST'])
+def stop():
+    jig = request.get_json()
+    response = requests.post(url=URL, data=jig).text
+    
+    return json.dumps({'status': response})
 
 
 if __name__ == '__main__':
-    app.run(host=server.local_ip, port=server.port, debug=True)
+    app.run(host=HOST, port=PORT, debug=True)

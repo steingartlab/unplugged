@@ -2,6 +2,15 @@ const JIG = "jig";
 const INPUTS = "inputFields";
 var selectedJig = '';
 
+SERVERIP = '0.0.0.0'
+SERVERPORT = '9696'
+
+function constructURL(endpoint) {
+    var url = "http://" + SERVERIP + ":" + SERVERPORT + "/" + endpoint
+
+    return url;
+};
+
 
 //get the saved value function - return the value of "v" from localStorage. 
 function getSavedValue(tag) {
@@ -25,7 +34,6 @@ function execute(event, endpoint) {
         saveValue(inputElements[i]);
     }
 
-    var ip_ending_value = document.getElementById(JIG).options[document.getElementById(JIG).selectedIndex].value;
     var exp_params = parse(inputElements, ip_ending_value);
     send(payload = exp_params, endpoint = endpoint, onload_fn = onload_figure);
 };
@@ -179,9 +187,10 @@ function toggleInputFields() {
         x.style.display = "block";
     } else {
         x.style.display = "none";
-    
-}
 
+    }
+
+};
 window.onload = function () {
     /**
      * Listen to buttons and act upon them being clicked.
@@ -199,5 +208,8 @@ window.onload = function () {
         // get confirmation
         execute(event, "start");
     });
-}
-
+    document.getElementById("stop").addEventListener("click", function (event) {
+        // get confirmation
+        execute(event, "stop");
+    });
+};
