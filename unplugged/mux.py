@@ -20,7 +20,7 @@ class Channel:
 
 
 def parse(command: str, modules: tuple[int, int], row: int) -> str:
-    return f'{command}{modules[0]},{row};{command}{modules[1]}{row};'
+    return f'{command}{modules[0]},{row};{command}{modules[1]},{row};'
 
 
 def execute(command: str, channel: Channel):

@@ -1,10 +1,11 @@
 import json
 import logging
 import os
+from threading import Thread
 
 import flask
 
-from unplugged import constants, controller
+from unplugged import constants, controller, daemon
 
 log_filename = "logs/logs.log"
 os.makedirs(os.path.dirname(log_filename), exist_ok=True)
@@ -21,6 +22,8 @@ with open('docker.json', 'r') as json_file:
 def make_ip(ip_ending) -> str:
     return f'{constants.NETWORK_IP}.{ip_ending}'
 
+thread_ = Thread(target=daemon.main)
+thread_.start()
 
 HOST = make_ip(ip_ending=containers['unplugged']['ip'])
 PORT = containers['unplugged']['port']
@@ -56,4 +59,4 @@ def commit():
 
 
 if __name__ == '__main__':
-    app.run(host=HOST, port=PORT, debug=True)
+    app.run(host=HOST, port=PORT, debug=False)

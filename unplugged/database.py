@@ -49,12 +49,13 @@ class Acoustics(Database):
         metadata TEXT
     )
     '''
-    keys = 'time, amps'  # Should be like this. We only write metadata once but the other multiple times.
+    keys = ['time, amps']  # Should be like this. We only write metadata once but the other multiple times.
     table = 'acoustics'
 
-    def __init__(self, db_filename: str):
+    def __init__(self, jig: str, exp_id: str):
+        path = f'{jig}/{exp_id}'
         super().__init__(
-            db_filename=db_filename,
+            db_filename=path,
             table_initializer=Acoustics.table_initializer
         )
         self._set_query()
@@ -66,7 +67,7 @@ class Acoustics(Database):
         for parameter in parameters:
             if isinstance(parameter, list):
                 parsed.append(
-                    sqlite3.Binary(np.array(parameter, dtype=np.float16))
+                   sqlite3.Binary(np.array(parameter, dtype=np.float16))
                 )
                 continue
 

@@ -29,8 +29,13 @@ class Pulser:
         pulse_width_ns: str = self.parse_pulse_width(transducer_frequency_MHz)
         self.pulse_width: str = f'W{pulse_width_ns}'
         
+        self._gain_dB = gain_dB
         gain_parsed = self.parse_gain(gain_dB)
         self.gain: str = f'G{gain_parsed}' # In 1/10 of actual, so G300 is 30 dB
+
+    @property
+    def gain_dB(self):
+        return self._gain_dB
 
     @staticmethod
     def parse_pulse_width(transducer_frequency_MHz: float) -> str:

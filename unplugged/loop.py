@@ -25,17 +25,17 @@ def _loop(jig: boilerplate.Jig):
     payload['waveform'] = pulse.pulse(jig.mode)
 
     if jig.status == boilerplate.Status.pulsing:
-        figure.plot(payload['waveform'], jig.mode)
+        figure.plot(waveform=payload['waveform'], jig=jig)
         return
     
-    database_ = database.Acoustics(db_filename=jig.exp_id)
+    database_ = database.Acoustics(exp_id=jig.exp_id, jig=jig.name)
     database_.write(payload)
     database_.close()
 
 
 def loop():
-    print('there')
     meta = controller.load_most_recent_meta()
+
     for name, params in meta.items():        
         mode = boilerplate.Mode(
             pulser=pulser.Pulser(params['gain_dB']),
@@ -58,5 +58,6 @@ def loop():
             _loop(jig)
             
         except Exception as e:
+            print(e)
             slack.post(message=f"Unplugged: ```{e}```")
             continue

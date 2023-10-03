@@ -71,6 +71,10 @@
     </td>
 </tr>
 
+{% for image_name, image_url in IMAGES.items() %}
+<h2>{{ image_name }}</h2> <img src="{{ url_for('static', filename=image_url) }}" alt="{{ image_name }} Image">
+{% endfor %}
+
 
 <script src="./static/script.js"></script>
 

@@ -10,6 +10,10 @@ def _most_recent(jig, filetype) -> tuple[float, str]:
     latest_file = None
 
     directory = f'{constants.DATA_DIRECTORY}/{jig}'
+    does_exist = os.path.exists(directory)
+
+    if not does_exist:
+        os.makedirs(directory, exist_ok=True)
 
     for filename in os.listdir(directory):
         if filename.endswith(filetype):
@@ -31,16 +35,12 @@ def check_when_last_updated(jig: str) -> Union[float,str]:
     if time_since_last_updated > 1.6e9:
         return 'inf'
     
-    return time_since_last_updated
+    return round(time_since_last_updated, 1)
 
 
 def get_most_recent_png(jig) -> Union[bytes, None]:
     _, latest_file = _most_recent(jig, filetype='png')
-
     if latest_file is None:
         return
 
-    with open(latest_file, "rb") as f:
-        png_data = f.read()
-
-    return png_data
+    return f'/static/{latest_file}'

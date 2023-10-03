@@ -11,31 +11,27 @@ from pytz import timezone
 from unplugged import boilerplate, constants
 
 
-def _plot(ax, waveform, pulsing_params, jig):
-    t = np.linspace(
-        pulsing_params.delay,
-        pulsing_params.delay+pulsing_params.duration,
-        len(waveform)
-    )
+def _plot(ax, waveform, jig: boilerplate.Jig):
+    delay = float(jig.mode.picoscope.delay)
+    duration = float(jig.mode.picoscope.duration)
+    t = np.linspace(delay, delay+duration, len(waveform))
     
     ax.plot(t, waveform, '#0033a0', linewidth=2)
     ax.set_xlim(t[0], t[-1])
     ax.set_xlabel("Time (us)")
 
-    if jig == 'transmission':
-        ax.set_ylabel("Amplitude (V)")
-    
     tz = timezone('EST')
     now_ = datetime.now(tz)
     now_str = now_.strftime("%Y-%m-%d %H:%M:%S")
+    text_ = f'dt: {now_str}\njig: {jig.name}\n'
     
-    text_ = f'dt: {now_str}\njig: {jig}\n'
-
-    for key, val in asdict(pulsing_params).items():
+    for key, val in asdict(jig.mode.picoscope).items():
         text_ += key + ': ' + str(val) + '\n'
+    
+    text_ += f'gain (dB): {str(jig.mode.pulser.gain_dB)}\n'
 
     ax.text(
-        x=pulsing_params.delay+0.2,
+        x=delay+0.2,
         y=max(waveform),
         s=text_,
         fontsize=5,
@@ -55,14 +51,8 @@ def plot(waveform: list, jig: boilerplate.Jig) -> None:
     """
 
     fig, ax = plt.subplots(figsize=(3, 2), dpi=200, sharey=True)
-
-    _plot(
-        ax=ax,
-        waveform=waveform,
-        pulsing_params=jig.mode.picoscope,
-        jig=jig.name
-    )
-        
+    _plot(ax=ax, waveform=waveform, jig=jig)
     now = time()
     fig_name = f'{constants.DATA_DIRECTORY}/{jig.name}/pulse_{round(now)}.png'
     plt.savefig(fig_name, format='png')
+    plt.clf()

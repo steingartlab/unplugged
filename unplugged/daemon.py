@@ -9,10 +9,11 @@ import time
 
 from unplugged import constants, loop
 
+def main():
+    schedule.every(constants.SLEEP_BETWEEN_LOOPS_S).seconds.do(loop.loop)
 
-schedule.every(constants.SLEEP_BETWEEN_LOOPS_S).seconds.do(loop.loop)
+    while True:
+        schedule.run_pending()
+        time.sleep(0.5)
 
 
-while True:
-    schedule.run_pending()
-    time.sleep(0.5)
