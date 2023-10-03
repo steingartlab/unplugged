@@ -1,76 +1,58 @@
 import json
 import logging
+import os
 
-from flask import Flask, request, render_template
-import requests
+import flask
 
-NETWORK_IP = '0.0.0'
+from unplugged import constants, controller
+
+log_filename = "logs/logs.log"
+os.makedirs(os.path.dirname(log_filename), exist_ok=True)
+logging.basicConfig(
+    filename=log_filename,
+    level=logging.WARNING,
+    format='%(asctime)s: %(message)s'
+)
 
 with open('docker.json', 'r') as json_file:
     containers = json.load(json_file)
 
 
 def make_ip(ip_ending) -> str:
-    return f'{NETWORK_IP}.{ip_ending}'
+    return f'{constants.NETWORK_IP}.{ip_ending}'
 
 
 HOST = make_ip(ip_ending=containers['unplugged']['ip'])
 PORT = containers['unplugged']['port']
-URL = f"http://10.251.67.179:{containers['remotecontrol']['port']}"
 
-JIGS = (
-    'pikachu',
-    'snorlax',
-    'charmander',
-    'bulbasaur',
-    'clefairy'
-)
+app = flask.Flask(__name__)
 
-app = Flask(__name__)
-
-
-def make_url(endpoint: str) -> str:
-    return f'{URL}/{endpoint}'
-
-
-def execute(endpoint: str):
-    exp_params: dict = request.get_json()
-    logging.info(exp_params)
-    url = make_url(endpoint=endpoint)
-
-    return requests.post(url=url, data=exp_params).text
+@app.template_filter('tojson')  # Needed for commit() call in index.html
+def tojson_filter(value):
+    return json.dumps(value)
 
 
 @app.route('/')
 def index():
-    return render_template('index.html', jigs=JIGS)
+    return flask.render_template(
+        'index.html',
+        JIGS=constants.JIGS,
+        USERS=constants.USERS,
+        VOLTAGE_RANGES=constants.VOLTAGE_RANGES,
+        STATUS=constants.STATUS,
+        META=controller.load_most_recent_meta(),
+        TIMESTAMPS=controller.load_most_recent_timestamps(),
+        IMAGES=controller.load_most_recent_images()
+    )
 
 
-@app.route('/pulse', methods=['POST'])
-def pulse():
-    return execute(endpoint='pulser')
+@app.route('/commit', methods=['POST'])
+def commit():
+    payload = flask.request.json
 
+    controller.write_meta(meta=payload)
 
-@app.route('/start', methods=['POST'])
-def start():
-    return execute(endpoint='start')
-
-
-@app.route('/status', methods=['POST'])
-def status():
-    jig = request.get_json()
-    print(jig)
-    response = requests.post(url=URL, data=jig).text
-    
-    return json.dumps({'status': response})
-
-
-@app.route('/stop', methods=['POST'])
-def stop():
-    jig = request.get_json()
-    response = requests.post(url=URL, data=jig).text
-    
-    return json.dumps({'status': response})
+    return 'OK'
 
 
 if __name__ == '__main__':

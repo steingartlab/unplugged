@@ -1,46 +1,68 @@
 body {
     font-family: 'Roboto', sans-serif;
-    max-width: 600px;
+    max-width: 500px;
     /* Adjust the max-width value as needed */
     margin: 0 auto;
     /* Center the content horizontally */
 }
 
-.form-group {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    /* Align items to the left */
-    align-items: justify;
-    margin-bottom: 10px;
+table {
+    border-collapse: collapse;
+    width: 100%;
 }
 
-.form-group label {
-    margin-right: 10px;
+label {
+    display: inline-block;
+    width: 200px;
     text-align: left;
 }
 
-.form-group input[type="text"] {
+input[type="text"] {
+    display: inline-block;
+    width: 100%;
     text-align: left;
 }
 
-.form-group input[type="number"] {
-    flex: 0.1;
+input[type="number"] {
+    display: inline-block;
+    width: 100%;
     text-align: right;
-    margin-left: auto;
-    /* Align the input boxes to the right within the form-group */
 }
 
-/* Additional style for the form itself */
-form {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    /* Align the form to the left within the body */
-    margin: 0;
-    padding: 0px;
+th,
+td {
+    text-align: left;
+    padding: 8px;
 }
 
-input:focus {
-    border: 2px solid blue;
+th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+#commit-button {
+    margin-top: 10px;
+    padding: 10px;
+    font-size: 16px;
+}
+
+body {
+    background-color: #f0f0f0;
+}
+
+#jig-table {
+    background-color: #c8e6c9;
+    border: 10px solid #81c784;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+#jig-table th,
+#jig-table td {
+    padding: 5px;
+    text-align: center;
 }

@@ -1,100 +1,79 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 
 <head>
-    <meta charset="utf-8">
     <title>MTV Unplugged</title>
-    <link rel="stylesheet" href="/static/style.css">
-    <link rel="icon" href="/static/kerry.png">
+    <link rel="stylesheet" type="text/css" href="../static/style.css">
+    <link rel="icon" href="../static/mtv.png" type="image/png">
+
 </head>
-
-<body>
-    <h1>&#119070 Getting jiggy with it &#x266a</h1>
-
-    <div class="form-group">
-        <label for="jig">Choose your own adventure:</label>
-
-        <br>
-
-        <select id="jig" name="jig">
-            <option value="" selected disabled>Select player</option>
-            {% for option in jigs %}
-            <option value="{{ option }}">{{ option }}</option>
-            {% endfor %}
-        </select>
-    </div>
-
-    <form>
-        <div class="form-group" id="inputFields" style="display: none;">
-            <label> <i>The default values are the previous ones for the currently selected jig</i></label>
-
-            <br>
-            <br>
-
-            <label for="delay">Delay [us]:</label>
-            <input type="number" id="delay" name="delay" onkeyup="saveValue(this)" ;>
-
-            <br>
-            <br>
-
-            <label for="duration">Duration [us]:</label>
-            <input type="number" id="duration" name="duration" onkeyup="saveValue(this)" ;>
-
-            <br>
-            <br>
-
-            <label for="avg_num">Avg num [ ]:</label>
-            <input type="number" id="avg_num" name="avg_num" onkeyup="saveValue(this)" ;>
-
-            <br>
-            <br>
-
-            <label for="voltage_range">Voltage range [V]:</label>
-            <input type="number" :focus id="voltage_range" name="voltage_range" onkeyup="saveValue(this)" ;>
-            <br>
-            <br>
-
-            <label for="gain_dB">Gain [dB]:</label>
-            <input type="number" id="dain_dB" name="gain_dB" onkeyup="saveValue(this)" ;>
-            <br>
-            <br>
-
-            <label for="exp_duration">Exp duration [h]:</label>
-            <input type="number" id="exp_duration" name="exp_duration" onkeyup="saveValue(this)" ;>
-
-            <br>
-            <br>
-
-            <label for="exp_id">Experiment Identifier:</label>
-            <input type="text" id="exp_id" name="exp_id" ;>
-        </div>
-
-        <br>
-        <br>
-
-        <button type="submit" id="pulse">Send a single pulse</button>
-        <br>
-
-        <button type="submit" id="start">Start experiment</button>
-        <br>
-
-        <button type="submit" id="kill">Kill experiment</button>
-
-    </form>
-
-    <br>
-    <br>
-
-    <div id="status"></div>
-    <div id="message"></div>
-    <div>
-        <canvas id="figure"></canvas>
-    </div>
-
-    <script src="/static/script.js"></script>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
+<h1>Unplugged</h1>
 </body>
 
+<table>
+    <thead>
+        <tr>
+            <th>jig</th>
+            <th>status</th>
+            <th>t since update (s)</th>
+            <th>user</th>
+            <th>experiment ID</th>
+            <th>delay (us)</th>
+            <th>duration (us)</th>
+            <th>voltage range (V)</th>
+            <th>gain (dB)</th>
+            <th>average number</th>
+            <th>mux row</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for jig, data in META.items() %}
+        <tr>
+            <td>{{ jig }}</td>
+            <td>
+                <select name="{{ jig }}_status">
+                    {% for status in STATUS %}
+                    <option value="{{ status }}" {% if data['status']==status %}selected{% endif %}>{{ status }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </td>
+            <td>{{TIMESTAMPS[jig]}}</td>
+            <td>
+                <select name="{{ jig }}_user">
+                    {% for user in USERS %}
+                    <option value="{{ user }}" {% if data["user"]==user %}selected{% endif %}>{{ user }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            <td><input type="text" name="{{ jig }}_exp_id" value="{{ data['exp_id'] }}"></td>
+            <td><input type="number" name="{{ jig }}_delay" value="{{ data['delay'] }}"></td>
+            <td><input type="number" name="{{ jig }}_duration" value="{{ data['duration'] }}"></td>
+            <td>
+                <select name="{{ jig }}_voltage_range">
+                    {% for voltage_range in VOLTAGE_RANGES %}
+                    <option value="{{ voltage_range }}" {% if data['voltage_range']==voltage_range %}selected{% endif
+                        %}>{{
+                        voltage_range }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            <td><input type="number" name="{{ jig }}_gain_dB" value="{{ data['gain_dB'] }}"></td>
+            <td><input type="number" name="{{ jig }}_avg_num" value="{{ data['avg_num'] }}"></td>
+            <td><input type="number" name="{{ jig }}_mux_row" value="{{ data['mux_row'] }}"></td>
+            {% endfor %}
+    </tbody>
+</table>
 
+<tr>
+    <td colspan="{{ JIGS|length + 1 }}">
+        <button id="commit-button" onclick="commit({{META|tojson}})">Commit</button>
+    </td>
+</tr>
+
+
+<script src="./static/script.js"></script>
+
+</body>
 
 </html>
