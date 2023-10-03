@@ -22,8 +22,8 @@ with open('docker.json', 'r') as json_file:
 def make_ip(ip_ending) -> str:
     return f'{constants.NETWORK_IP}.{ip_ending}'
 
-thread_ = Thread(target=daemon.main)
-thread_.start()
+# thread_ = Thread(target=daemon.main)
+# thread_.start()
 
 HOST = make_ip(ip_ending=containers['unplugged']['ip'])
 PORT = containers['unplugged']['port']
@@ -56,6 +56,10 @@ def commit():
     controller.write_meta(updated_jigs=payload)
 
     return 'OK'
+
+@app.route('/<path:filename>')
+def get_image(filename):
+    return flask.send_from_directory('', filename)
 
 
 if __name__ == '__main__':

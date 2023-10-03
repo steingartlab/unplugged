@@ -38,9 +38,10 @@ def check_when_last_updated(jig: str) -> Union[float,str]:
     return round(time_since_last_updated, 1)
 
 
-def get_most_recent_png(jig) -> Union[bytes, None]:
+def get_most_recent_png(jig) -> Union[str, None]:
     _, latest_file = _most_recent(jig, filetype='png')
+    
     if latest_file is None:
         return
 
-    return f'/static/{latest_file}'
+    return latest_file
