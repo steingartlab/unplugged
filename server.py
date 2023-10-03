@@ -50,7 +50,7 @@ def index():
 def commit():
     payload = flask.request.json
 
-    controller.write_meta(meta=payload)
+    controller.write_meta(updated_jigs=payload)
 
     return 'OK'
 

@@ -34,6 +34,7 @@ def _loop(jig: boilerplate.Jig):
 
 
 def loop():
+    print('there')
     meta = controller.load_most_recent_meta()
     for name, params in meta.items():        
         mode = boilerplate.Mode(
