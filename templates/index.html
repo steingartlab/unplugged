@@ -13,17 +13,61 @@
 <table>
     <thead>
         <tr>
-            <th>jig</th>
-            <th>status</th>
-            <th>t since update (s)</th>
-            <th>user</th>
-            <th>experiment ID</th>
-            <th>delay (us)</th>
-            <th>duration (us)</th>
-            <th>voltage range (V)</th>
-            <th>gain (dB)</th>
-            <th>average number</th>
-            <th>mux row</th>
+            <th class="tooltip" title="jig">
+                jig
+                <span class="tooltiptext">Named after pokémons because we apparently plateaued in maturity at 7. Each
+                    jig has a
+                    sticker denoting the respective pokémon</span>
+            </th>
+            <th class="tooltip" title="jig">
+                status
+                <span class="tooltiptext">Set to "idling" when you want to stop. Set to "pulse" when you want to test
+                    signal parameters. Set to "running" when experiment should start. Don't forget to click
+                    "commit"!</span>
+            </th>
+            <th class="tooltip" title="since">
+                t since updated [s]
+                <span class="tooltiptext">Time elapsed since a pulse was last recorded on this jig</span>
+            </th>
+            <th class="tooltip" title="user">
+                user
+                <span class="tooltiptext">Doesn't do anything—other than logically organizing who is using each
+                    jig.</span>
+            </th>
+            <th class="tooltip" title="experimentID">
+                experiment ID
+                <span class="tooltiptext">Ideally a unique, systematic identifier. Unplugged does not enforce unique
+                    experiment identifiers, so tread carefully</span>
+            </th>
+            <th class="tooltip" title="delay">
+                delay [us]
+                <span class="tooltiptext">Time elapsed between pulse bang and oscilloscope starting to collect
+                    data.</span>
+            </th>
+            <th class="tooltip" title="duration">
+                duration [us]
+                <span class="tooltiptext">Window in which the oscilloscope collects data.</span>
+            </th>
+            <th class="tooltip" title="gain">
+                gain (dB)
+                <span class="tooltiptext">Amplification factor. This should be tweaked for the amplitude to be roughly
+                    in the plus/minus 0.5 V range.</span>
+            </th>
+            <th class="tooltip" title="voltage_range">
+                voltage range [V]
+                <span class="tooltiptext">Max/min value for the oscilloscope. For the unplugged setup, it should
+                    generally not be tinkered with. Tweak the gain instead</span>
+            </th>
+            <th class="tooltip" title="avg_num">
+                average number
+                <span class="tooltiptext">Number of waveforms to average across. Generally not to be tinkered
+                    with.</span>
+            </th>
+            <th class="tooltip" title="mux_row">
+                mux row
+                <span class="tooltiptext">Unique to each jig. Don't change this—in software or hardware—without
+                    informing the IT department.</span>
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -49,6 +93,7 @@
             <td><input type="text" name="{{ jig }}_exp_id" value="{{ data['exp_id'] }}"></td>
             <td><input type="number" name="{{ jig }}_delay" value="{{ data['delay'] }}"></td>
             <td><input type="number" name="{{ jig }}_duration" value="{{ data['duration'] }}"></td>
+            <td><input type="number" name="{{ jig }}_gain_dB" value="{{ data['gain_dB'] }}"></td>
             <td>
                 <select name="{{ jig }}_voltage_range">
                     {% for voltage_range in VOLTAGE_RANGES %}
@@ -58,7 +103,6 @@
                     {% endfor %}
                 </select>
             </td>
-            <td><input type="number" name="{{ jig }}_gain_dB" value="{{ data['gain_dB'] }}"></td>
             <td><input type="number" name="{{ jig }}_avg_num" value="{{ data['avg_num'] }}"></td>
             <td><input type="number" name="{{ jig }}_mux_row" value="{{ data['mux_row'] }}"></td>
             {% endfor %}
@@ -72,10 +116,10 @@
 </tr>
 <br>
 <br>
-    <div style="font-style: italic;">
-        The figures displayed are the latest ones for each respective jig. They are timestamped if you need a sanity check.
-    </div>
-    <br>
+<div style="font-style: italic;">
+    The figures displayed are the latest ones for each respective jig. They are timestamped if you need a sanity check.
+</div>
+<br>
 {% for image_name, image_url in IMAGES.items() %}
 <h2>{{ image_name }}</h2>
 <img src="{{ url_for('get_image', filename=image_url) }}" alt="{{ image_name }} Image">
