@@ -70,7 +70,12 @@
         <button id="commit-button" onclick="commit({{META|tojson}})">Commit</button>
     </td>
 </tr>
-
+<br>
+<br>
+    <div style="font-style: italic;">
+        The figures displayed are the latest ones for each respective jig. They are timestamped if you need a sanity check.
+    </div>
+    <br>
 {% for image_name, image_url in IMAGES.items() %}
 <h2>{{ image_name }}</h2>
 <img src="{{ url_for('get_image', filename=image_url) }}" alt="{{ image_name }} Image">

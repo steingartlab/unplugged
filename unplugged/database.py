@@ -11,7 +11,7 @@ import numpy as np
 
 from unplugged import constants
 
-Payload = Union[float, int, np.ndarray]
+Payload = Union[float, int]#, np.ndarray]
 
 
 class Database:
