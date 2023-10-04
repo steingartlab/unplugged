@@ -46,7 +46,7 @@ class Pulser:
     @staticmethod
     def parse_gain(gain_dB: int) -> int:
         """"""
-        return int(gain_dB * 10)
+        return int(gain_dB) * 10
 
 
 @dataclass
