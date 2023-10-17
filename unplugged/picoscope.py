@@ -6,10 +6,10 @@ from typing import Dict, List
 
 import requests
 
-from unplugged import docker
+from unplugged import constants, docker
 
 
-URL: str = f'http://{docker.BASE_IP}.{str(docker.picoscope.ip_ending)}:{str(docker.picoscope.port)}/get_wave'
+URL: str = f'http://{constants.NETWORK_IP}.{str(docker.picoscope.ip_ending)}:{str(docker.picoscope.port)}/get_wave'
 
 
 @dataclass#(kw_only) <- TODO: Implement when py3.10

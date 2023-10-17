@@ -9,11 +9,11 @@ from typing import Optional
 
 import requests
 
-from unplugged.docker import Container, BASE_IP
+from unplugged import constants, docker
 
 class NodeForwarder:
 
-    def __init__(self, container: Container):
+    def __init__(self, container: docker.Container):
         self.container = container
 
         self.read = partial(self.execute, command='read')
@@ -23,7 +23,7 @@ class NodeForwarder:
 
     @property
     def url(self):
-        return f'http://{BASE_IP}.{str(self.container.ip_ending)}:{str(self.container.port)}'
+        return f'http://{constants.NETWORK_IP}.{str(self.container.ip_ending)}:{str(self.container.port)}'
     
     def execute(self, command: str, payload: Optional[str] = None) -> str:
         endpoint = f'{self.url}/{command}/{payload}'

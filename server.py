@@ -5,7 +5,7 @@ from threading import Thread
 
 import flask
 
-from unplugged import constants, controller, daemon
+from unplugged import constants, controller, daemon, docker, initializer
 
 log_filename = "logs/logs.log"
 os.makedirs(os.path.dirname(log_filename), exist_ok=True)
@@ -15,18 +15,18 @@ logging.basicConfig(
     format='%(asctime)s: %(message)s'
 )
 
-with open('docker.json', 'r') as json_file:
-    containers = json.load(json_file)
-
 
 def make_ip(ip_ending) -> str:
     return f'{constants.NETWORK_IP}.{ip_ending}'
 
+
 thread_ = Thread(target=daemon.main)
 thread_.start()
 
-HOST = make_ip(ip_ending=containers['unplugged']['ip'])
-PORT = containers['unplugged']['port']
+initializer.initialize()
+
+HOST = make_ip(ip_ending=docker.unplugged.ip_ending)
+PORT = docker.unplugged.port
 
 app = flask.Flask(__name__)
 
