@@ -23,7 +23,7 @@ else:
 
 
 # Create dummy pokemon folders
-directory_name = 'acoustics_data'
+directory_name = 'acoustics_data' #need to fix this
 jigs = constants.JIGS
 for jig_name in jigs:
     new_directory = os.path.join(os.getcwd(), directory_name, jig_name)
