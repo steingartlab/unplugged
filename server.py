@@ -10,7 +10,7 @@ from unplugged import constants, controller, daemon, docker, initializer
 log_filename = "logs/logs.log"
 os.makedirs(os.path.dirname(log_filename), exist_ok=True)
 logging.basicConfig(
-    filename=log_filename,
+    e,
     level=logging.WARNING,
     format='%(asctime)s: %(message)s'
 )
