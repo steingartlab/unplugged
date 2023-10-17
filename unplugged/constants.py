@@ -2,12 +2,12 @@
 JIGS = (
     'pikachu',
     'zapdos',
-    # 'magnemite',
-    # 'jolteon',
-    # 'raichu',
-    # 'electabuzz',
-    # 'jigglypuff',
-    # 'voltorb',
+    'magnemite',
+    'jolteon',
+    'raichu',
+    'electabuzz',
+    'jigglypuff',
+    'voltorb',
 )
 
 STATUS = ('idling', 'running', 'pulsing')
