@@ -52,8 +52,7 @@ def plot(waveform: list, jig: boilerplate.Jig) -> None:
 
     fig, ax = plt.subplots(figsize=(3, 2), dpi=200, sharey=True)
     _plot(ax=ax, waveform=waveform, jig=jig)
-    now = time()
-    fig_name = f'{constants.DATA_DIRECTORY}/{jig.name}/pulse_{round(now)}.png'
+    fig_name = f'{constants.DATA_DIRECTORY}/{jig.name}/pulse.png'
     plt.savefig(fig_name, format='png')
     plt.clf()
     plt.close()

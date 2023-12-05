@@ -27,13 +27,14 @@ def _loop(jig: boilerplate.Jig):
     if jig.status == boilerplate.Status.pulsing:
         figure.plot(waveform=payload['waveform'], jig=jig)
         return
-    
+
     database_ = database.Acoustics(exp_id=jig.exp_id, jig=jig.name)
     database_.write(payload)
     database_.close()
 
 
 def loop():
+    print('looping')
     meta = controller.load_most_recent_meta()
 
     for name, params in meta.items():        
@@ -47,6 +48,7 @@ def loop():
                 avg_num=params['avg_num']
             ),
         )
+        print(mode)
         jig = boilerplate.Jig(
             name=name,
             status=params['status'],

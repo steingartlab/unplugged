@@ -1,7 +1,7 @@
 
 JIGS = (
     'pikachu',
-    'zapdos',
+    'vaporeon',
     'magnemite',
     'jolteon',
     'raichu',
@@ -17,6 +17,7 @@ USERS = (
     'aamani',
     'chris',
     'gunnar',
+    'jon',
     'libby',
     'kerry',
     'kristina',

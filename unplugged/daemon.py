@@ -13,6 +13,7 @@ def main():
     schedule.every(constants.SLEEP_BETWEEN_LOOPS_S).seconds.do(loop.loop)
 
     while True:
+        print('daemoning')
         schedule.run_pending()
         time.sleep(0.5)
 

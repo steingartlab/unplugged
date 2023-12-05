@@ -63,4 +63,5 @@ class Config:
 
 def set_properties(properties: Pulser):    
     for message in vars(properties).values():
+
         pulser.write(payload=message)
