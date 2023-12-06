@@ -5,7 +5,11 @@
     <title>MTV Unplugged</title>
     <link rel="stylesheet" type="text/css" href="../static/style.css">
     <link rel="icon" href="../static/mtv.png" type="image/png">
-
+    <style>
+        table thead tr th[title="experimentID"] {
+            width: 200px !important;
+        }
+    </style>
 </head>
 <h1>Unplugged</h1>
 </body>
@@ -49,24 +53,23 @@
                 <span class="tooltiptext">Window in which the oscilloscope collects data.</span>
             </th>
             <th class="tooltip" title="gain">
-                gain (dB)
+                gain [dB]
                 <span class="tooltiptext">Amplification factor. This should be tweaked for the amplitude to be roughly
                     in the plus/minus 0.5 V range.</span>
             </th>
-            <th class="tooltip" title="voltage_range">
-                voltage range [V]
-                <span class="tooltiptext">Max/min value for the oscilloscope. For the unplugged setup, it should
-                    generally not be tinkered with. Tweak the gain instead</span>
-            </th>
-            <th class="tooltip" title="avg_num">
-                average number
-                <span class="tooltiptext">Number of waveforms to average across. Generally not to be tinkered
-                    with.</span>
+            <th class="tooltip" title="mux_module">
+                mux module
+                <span class="tooltiptext">Unique to each jig. Don't change this—in software or hardware—without
+                    consulting the IT department.</span>
             </th>
             <th class="tooltip" title="mux_row">
                 mux row
                 <span class="tooltiptext">Unique to each jig. Don't change this—in software or hardware—without
-                    informing the IT department.</span>
+                    consulting the IT department.</span>
+            </th>
+            <th class="tooltip" title="mode">
+                pulser mode
+                <span class="tooltiptext">Either transmission (1) or pulse/echo (0).</span>
             </th>
         </tr>
     </thead>
@@ -94,21 +97,19 @@
             <td><input type="number" name="{{ jig }}_delay" value="{{ data['delay'] }}"></td>
             <td><input type="number" name="{{ jig }}_duration" value="{{ data['duration'] }}"></td>
             <td><input type="number" name="{{ jig }}_gain_dB" value="{{ data['gain_dB'] }}"></td>
-            <td>
-                <select name="{{ jig }}_voltage_range">
-                    {% for voltage_range in VOLTAGE_RANGES %}
-                    <option value="{{ voltage_range }}" {% if data['voltage_range']==voltage_range %}selected{% endif
-                        %}>{{
-                        voltage_range }}</option>
-                    {% endfor %}
-                </select>
-            </td>
-            <td><input type="number" name="{{ jig }}_avg_num" value="{{ data['avg_num'] }}"></td>
+            <td><input type="number" name="{{ jig }}_mode" value="{{ data['mode'] }}"></td>
+            <td><input type="number" name="{{ jig }}_mux_module" value="{{ data['mux_module'] }}"></td>
             <td><input type="number" name="{{ jig }}_mux_row" value="{{ data['mux_row'] }}"></td>
+            <td><input type="number" name="{{ jig }}_mode" value="{{ data['mode'] }}"></td>
             {% endfor %}
     </tbody>
 </table>
 
+<!-- Remove the existing image rendering loop -->
+<!-- {% for image_name, image_url in IMAGES.items() %}
+<h2>{{ image_name }}</h2>
+<img src="{{ url_for('get_image', filename=image_url) }}" alt="{{ image_name }} Image">
+{% endfor %} -->
 <tr>
     <td colspan="{{ JIGS|length + 1 }}">
         <button id="commit-button" onclick="commit({{META|tojson}})">Commit</button>
@@ -116,14 +117,31 @@
 </tr>
 <br>
 <br>
+
+<!-- Add a dropdown list for jig selection -->
+<select id="jig-select" onchange="showSelectedImage()">
+    <option value="">Select a Jig</option>
+    {% for jig in JIGS %}
+    <option value="{{ jig }}">{{ jig }}</option>
+    {% endfor %}
+</select>
+
+
+
+<!-- {% for image_name, image_url in IMAGES.items() %}
+    <h2>{{ image_name }}</h2>
+    <img src="{{ url_for('get_image', filename=image_url) }}" alt="{{ image_name }} Image">
+    {% endfor %} -->
+
+<!-- Add an empty image container -->
+<div id="image-container"></div>
+<br>
+<br>
 <div style="font-style: italic;">
-    The figures displayed are the latest ones for each respective jig. They are timestamped if you need a sanity check.
+    The figure displayed is the latest ones for the selected jig. It is timestamped if you need a sanity check.
 </div>
 <br>
-{% for image_name, image_url in IMAGES.items() %}
-<h2>{{ image_name }}</h2>
-<img src="{{ url_for('get_image', filename=image_url) }}" alt="{{ image_name }} Image">
-{% endfor %}
+<br>
 
 <script src="./static/script.js"></script>
 

@@ -38,8 +38,11 @@ def loop():
 
     for name, params in meta.items():        
         mode = boilerplate.Mode(
-            pulser=pulser.Pulser(params['gain_dB']),
-            mux_channel=mux.Channel(row=params['mux_row']),
+            pulser=pulser.Pulser(params['gain_dB'], mode=params['mode']),
+            mux_channel=mux.Channel(
+                module=params['mux_module'],
+                row=params['mux_row'])
+            ,
             picoscope=picoscope.Picoscope(
                 delay=params['delay'],
                 duration=params['duration'],

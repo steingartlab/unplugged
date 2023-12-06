@@ -38,20 +38,22 @@ function commit(META) {
         const exp_id = row.querySelector('[name$="_exp_id"]').value;
         const delay = row.querySelector('[name$="_delay"]').value;
         const duration = row.querySelector('[name$="_duration"]').value;
-        const voltage_range = row.querySelector('[name$="_voltage_range"]').value;
         const gain_dB = row.querySelector('[name$="_gain_dB"]').value;
-        const avg_num = row.querySelector('[name$="_avg_num"]').value;
+        const mode = row.querySelector('[name$="_mode"]').value;
         const mux_row = row.querySelector('[name$="_mux_row"]').value;
+        const mux_module = row.querySelector('[name$="_mux_module"]').value;
         updatedJigData = {
             'status': status,
             'user': user,
             'exp_id': exp_id,
             'delay': delay,
             'duration': duration,
-            'voltage_range': voltage_range,
+            'voltage_range': 1,  // I'm gonna regret this
             'gain_dB': gain_dB,
-            'avg_num': avg_num,
+            'mode': mode,
+            'avg_num': 32, // I'm gonna regreat this
             'mux_row': mux_row,
+            'mux_module': mux_module,
         };
 
         is_identical = compareObjects(updatedJigData, incumbentJigData);
@@ -62,3 +64,21 @@ function commit(META) {
     }
     xhr.send(JSON.stringify(data));
 };
+
+
+function showSelectedImage() {
+    var selectElement = document.getElementById("jig-select");
+    var selectedJig = selectElement.value;
+    var imageContainer = document.getElementById("image-container");
+
+    // Clear the image container
+    imageContainer.innerHTML = "";
+
+    // If a jig is selected, create and display the corresponding image
+    if (selectedJig) {
+        var image = document.createElement("img");
+        image.src = "/data/" + selectedJig + "/pulse.png";
+        image.alt = selectedJig + " Image";
+        imageContainer.appendChild(image);
+    }
+}

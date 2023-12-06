@@ -19,6 +19,11 @@ def _plot(ax, waveform, jig: boilerplate.Jig):
     ax.plot(t, waveform, '#0033a0', linewidth=2)
     ax.set_xlim(t[0], t[-1])
     ax.set_xlabel("Time (us)")
+    ax.set_ylim(-1, 1)
+    lines = (-0.5, 0.5)
+    
+    for line in lines:
+        ax.axhline(y=line, color='k', linestyle='--')
 
     tz = timezone('EST')
     now_ = datetime.now(tz)
