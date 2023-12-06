@@ -23,7 +23,7 @@ class Modes(Enum):
 class Pulser:
     """These properties need to be tweaked for each use case."""
 
-    def __init__(self, gain_dB: int, mode: Optional[int] = Modes.transmission.value, transducer_frequency_MHz: Optional[float] = 2.25):
+    def __init__(self, gain_dB: int, mode: int, transducer_frequency_MHz: Optional[float] = 2.25):
         self.mode: str = f'M{mode}'
         
         pulse_width_ns: str = self.parse_pulse_width(transducer_frequency_MHz)

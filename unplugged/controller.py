@@ -2,7 +2,7 @@ import ast
 import json
 from typing import Callable
 
-from unplugged import constants, database, utils
+from unplugged import constants, database, initializer, utils
 
 
 def _load_most_recent_meta():
@@ -14,7 +14,13 @@ def _load_most_recent_meta():
 
 
 def load_most_recent_meta() -> dict:
-    return json.loads(_load_most_recent_meta())
+    meta = json.loads(_load_most_recent_meta())
+
+    for jig_name in constants.JIGS:
+        if jig_name not in meta:
+            meta[jig_name] = initializer.DUMMY_INITIAL_METADATA["jig"]
+
+    return meta
 
 
 def write_meta(updated_jigs: dict) -> None:
@@ -23,7 +29,7 @@ def write_meta(updated_jigs: dict) -> None:
 
     for jig_name, jig_meta in updated_jigs.items():
         meta[jig_name] = jig_meta
-    
+
     database_ = database.Metadata()
     database_.write(meta)
     database_.close()

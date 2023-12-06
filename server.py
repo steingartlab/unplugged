@@ -10,7 +10,7 @@ from unplugged import constants, controller, daemon, docker, initializer
 log_filename = "logs/logs.log"
 os.makedirs(os.path.dirname(log_filename), exist_ok=True)
 logging.basicConfig(
-    filename = log_filename,
+    filename=log_filename,
     level=logging.WARNING,
     format='%(asctime)s: %(message)s'
 )
@@ -63,4 +63,4 @@ def get_image(filename):
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=PORT, debug=False)
+    app.run(host=HOST, port=PORT, debug=True)
