@@ -5,11 +5,6 @@
     <title>MTV Unplugged</title>
     <link rel="stylesheet" type="text/css" href="../static/style.css">
     <link rel="icon" href="../static/mtv.png" type="image/png">
-    <style>
-        table thead tr th[title="experimentID"] {
-            width: 200px !important;
-        }
-    </style>
 </head>
 <h1>Unplugged</h1>
 </body>
@@ -23,7 +18,7 @@
                     jig has a
                     sticker denoting the respective pokémon</span>
             </th>
-            <th class="tooltip" title="jig">
+            <th class="tooltip" title="status">
                 status
                 <span class="tooltiptext">Set to "idling" when you want to stop. Set to "pulse" when you want to test
                     signal parameters. Set to "running" when experiment should start. Don't forget to click
@@ -68,7 +63,7 @@
                     consulting the IT department.</span>
             </th>
             <th class="tooltip" title="mode">
-                pulser mode
+                mode
                 <span class="tooltiptext">Either transmission (1) or pulse/echo (0).</span>
             </th>
         </tr>
@@ -97,19 +92,21 @@
             <td><input type="number" name="{{ jig }}_delay" value="{{ data['delay'] }}"></td>
             <td><input type="number" name="{{ jig }}_duration" value="{{ data['duration'] }}"></td>
             <td><input type="number" name="{{ jig }}_gain_dB" value="{{ data['gain_dB'] }}"></td>
-            <td><input type="number" name="{{ jig }}_mode" value="{{ data['mode'] }}"></td>
             <td><input type="number" name="{{ jig }}_mux_module" value="{{ data['mux_module'] }}"></td>
             <td><input type="number" name="{{ jig }}_mux_row" value="{{ data['mux_row'] }}"></td>
-            <td><input type="number" name="{{ jig }}_mode" value="{{ data['mode'] }}"></td>
+            <td>
+                <select name="{{ jig }}_mode">
+                    <option value="1" {% if data['mode']==1 %}selected{% endif %}>T</option>
+                    <option value="0" {% if data['mode']==0 %}selected{% endif %}>P/E</option>
+                </select>
+            </td>
+            <!-- <td><input type="number" name="{{ jig }}_mux_row" value="{{ data['mux_row'] }}"></td> -->
             {% endfor %}
+        </tr>
+
     </tbody>
 </table>
 
-<!-- Remove the existing image rendering loop -->
-<!-- {% for image_name, image_url in IMAGES.items() %}
-<h2>{{ image_name }}</h2>
-<img src="{{ url_for('get_image', filename=image_url) }}" alt="{{ image_name }} Image">
-{% endfor %} -->
 <tr>
     <td colspan="{{ JIGS|length + 1 }}">
         <button id="commit-button" onclick="commit({{META|tojson}})">Commit</button>
@@ -126,14 +123,6 @@
     {% endfor %}
 </select>
 
-
-
-<!-- {% for image_name, image_url in IMAGES.items() %}
-    <h2>{{ image_name }}</h2>
-    <img src="{{ url_for('get_image', filename=image_url) }}" alt="{{ image_name }} Image">
-    {% endfor %} -->
-
-<!-- Add an empty image container -->
 <div id="image-container"></div>
 <br>
 <br>
