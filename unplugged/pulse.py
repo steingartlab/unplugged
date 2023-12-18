@@ -12,14 +12,12 @@ def pulse(mode: boilerplate.Mode) -> list[float]:
     pulser.set_properties(mode.pulser)
     sleep(0.1)  # Needed! For the pulser to switch
     
-    mux.clear()
     mux.latch(channel=mode.mux_channel)
     sleep(0.1)  # Needed! For the mux to switch
     
     raw = picoscope.callback(mode.picoscope)
-    sleep(0.1) 
-    #mux.clear()
-    #mux.unlatch(channel=mode.mux_channel)
+
+    mux.clear()
     pulser.turn_off()
     
     return raw[constants.WAVEFORM_COL][0]    
