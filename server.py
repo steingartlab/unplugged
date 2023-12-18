@@ -20,12 +20,10 @@ def make_ip(ip_ending) -> str:
     return f'{constants.NETWORK_IP}.{ip_ending}'
 
 initializer.initialize()  # To ensure the GUI starts up properly
-thread_ = Thread(target=loop.main)
-thread_.start()
+
 app = flask.Flask(__name__)
 HOST = make_ip(ip_ending=docker.unplugged.ip_ending)
 PORT = docker.unplugged.port
-
 
 @app.template_filter('tojson')  # Needed for commit() call in index.html
 def tojson_filter(value):
@@ -44,6 +42,13 @@ def index():
         IMAGES=controller.load_most_recent_images()
     )
 
+@app.route('/fruitloops')
+def fruitloops():
+    thread = Thread(target=loop.doit)
+    thread.daemon = True  # This thread dies when main thread (only non-daemon thread) exits.
+    thread.start()
+    
+    return ('I am the captain\nmy name is Dave')
 
 @app.route('/commit', methods=['POST'])
 def commit():
@@ -59,4 +64,5 @@ def get_image(filename):
 
 
 if __name__ == '__main__':
+    
     app.run(host=HOST, port=PORT, debug=True)

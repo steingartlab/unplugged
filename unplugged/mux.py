@@ -41,13 +41,14 @@ def parse(command: str, module: int, row: int) -> str:
 
 def execute(command: str, channel: Channel):
     offramp_row = channel.module if int(channel.module) < 6 else 6
+    offramp_row = 1 if int(offramp_row) == 0 else offramp_row
     offramp = parse(
         command=command, module=constants.MUX_HIGHWAY, row=offramp_row
     )  # row=channel.module is not a mistake. We arrange the connections like this by design
-    mux_.write(payload=offramp)
 
     parsed = parse(command=command, module=channel.module, row=channel.row)
-    mux_.write(payload=parsed)
+    payload = offramp + parsed
+    mux_.write(payload=payload)
 
 
 def clear():

@@ -6,16 +6,18 @@ import traceback
 
 from unplugged import boilerplate, constants, mux, picoscope, pulser, slack
 
+def _sleep(sleep_s: float = 0.05):
+    sleep(sleep_s)
 
 def _pulse(mode: boilerplate.Mode):
+    print('\tpulse')
     pulser.turn_on()
     pulser.set_properties(mode.pulser)
-    sleep(0.1)  # Needed! For the pulser to switch
+    _sleep()  # Needed! For the pulser to switch
 
     mux.clear()
-    sleep(0.1)  # Needed! For the mux to switch
     mux.latch(channel=mode.mux_channel)
-    sleep(0.1)  # Needed! For the mux to switch
+    _sleep()  # Needed! For the mux to switch
 
     raw = picoscope.callback(mode.picoscope)
 
@@ -26,7 +28,7 @@ def _pulse(mode: boilerplate.Mode):
 
 def pulse(mode: boilerplate.Mode) -> list[float]:
     try:
-        return _pulse()
+        return _pulse(mode)
 
     except Exception as e:
         traceback_details = traceback.format_exc()

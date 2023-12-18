@@ -3,6 +3,7 @@ executed in turn.
 """
 
 from time import sleep, time
+from threading import Lock
 
 from unplugged import constants
 
@@ -16,6 +17,8 @@ from unplugged import (
     pulse,
     pulser,
 )
+
+lock = Lock()
 
 
 def _loop(jig: boilerplate.Jig):
@@ -37,10 +40,11 @@ def _loop(jig: boilerplate.Jig):
     database_.close()
 
 
-def loop():
+def loopy():
     meta = controller.load_most_recent_meta()
 
     for name, params in meta.items():
+        print(name)
         mode = boilerplate.Mode(
             pulser=pulser.Pulser(params['gain_dB'], mode=params['mode']),
             mux_channel=mux.Channel(
@@ -63,14 +67,18 @@ def loop():
         _loop(jig)
 
 
-def main():
-    """Creates a continuous loop that runs the jig queue every 5 seconds.
+def doit():
+    """Creates a continuous loop that runs the jig queue every N seconds.
 
     Decided on doing this over a cronjob because it's easier to execute
     in a container — this script can act as an entrypoint.
     """
+    print('entering main loop')
+    lock.acquire()
 
     while True:
         print('external loop')
-        loop()
+        loopy()
         sleep(constants.SLEEP_BETWEEN_LOOPS_S)
+    
+    lock.release()

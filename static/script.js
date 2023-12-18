@@ -51,7 +51,7 @@ function commit(META) {
             'voltage_range': 1,  // I'm gonna regret this
             'gain_dB': gain_dB,
             'mode': mode,
-            'avg_num': 64, // I'm gonna regreat this
+            'avg_num': 32, // I'm gonna regreat this
             'mux_row': mux_row,
             'mux_module': mux_module,
         };
