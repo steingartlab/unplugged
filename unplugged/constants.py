@@ -1,5 +1,6 @@
 JIGS = (
     "pikachu",
+    "vaporeon",
     "zapdos",
     "magnemite",
     "jolteon",
@@ -31,10 +32,10 @@ USERS = (
     "zoe",
 )
 
-VOLTAGE_RANGES = (1, 0.5, 0.2, 0.1, 0.05, 0.02)
-
 DATA_DIRECTORY = "data"
 # NETWORK_IP = "0.0.0"
 NETWORK_IP = "192.168.0"
-SLEEP_BETWEEN_LOOPS_S = 5
+SLEEP_BETWEEN_LOOPS_S = 1 
 WAVEFORM_COL = "amps"
+MUX_HIGHWAY = 4
+PICOSCOPE_TIMEOUT_S = 10

@@ -16,12 +16,11 @@ from dataclasses import dataclass
 from functools import partial
 from typing import Callable
 
-from unplugged import docker
+from unplugged import constants, docker
 from unplugged.nodeforwarder import NodeForwarder
 
 
 mux_: NodeForwarder = NodeForwarder(container=docker.mux)
-HIGHWAY = 4
 
 
 @dataclass
@@ -37,17 +36,18 @@ class Channel:
 
 
 def parse(command: str, module: int, row: int) -> str:
-    return f"{command}{module},{row};{command}{module + 1},{row};"
+    return f"{command}{module},{row};{command}{int(module) + 1},{row};"
 
 
 def execute(command: str, channel: Channel):
+    offramp_row = channel.module if int(channel.module) < 6 else 6
     offramp = parse(
-        command=command, module=HIGHWAY, row=channel.module
+        command=command, module=constants.MUX_HIGHWAY, row=offramp_row
     )  # row=channel.module is not a mistake. We arrange the connections like this by design
-    mux_.write(offramp)
+    mux_.write(payload=offramp)
 
     parsed = parse(command=command, module=channel.module, row=channel.row)
-    mux_.write(parsed)
+    mux_.write(payload=parsed)
 
 
 def clear():

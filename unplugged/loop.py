@@ -2,7 +2,10 @@
 executed in turn.
 """
 
-from time import time
+from time import sleep, time
+import traceback
+
+from unplugged import constants
 
 from unplugged import (
     boilerplate,
@@ -34,10 +37,9 @@ def _loop(jig: boilerplate.Jig):
 
 
 def loop():
-    print('looping')
     meta = controller.load_most_recent_meta()
 
-    for name, params in meta.items():        
+    for name, params in meta.items():
         mode = boilerplate.Mode(
             pulser=pulser.Pulser(params['gain_dB'], mode=params['mode']),
             mux_channel=mux.Channel(
@@ -51,18 +53,29 @@ def loop():
                 avg_num=params['avg_num']
             ),
         )
-        print(mode)
         jig = boilerplate.Jig(
             name=name,
             status=params['status'],
             exp_id=params['exp_id'],
             mode=mode
         )
+        _loop(jig)
 
+
+def main():
+    """Creates a continuous loop that runs the jig queue every 5 seconds.
+
+    Decided on doing this over a cronjob because it's easier to execute
+    in a container — this script can act as an entrypoint.
+    """
+
+    while True:
         try:
-            _loop(jig)
-            
+            print('external loop')
+            loop()
+            sleep(constants.SLEEP_BETWEEN_LOOPS_S)
         except Exception as e:
-            print(e)
-            slack.post(message=f"Unplugged: ```{e}```")
+            traceback_details = traceback.format_exc()
+            print(traceback_details)
+            slack.post(message=f"Unplugged: ```{traceback_details}```")
             continue

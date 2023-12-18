@@ -5,7 +5,7 @@ from threading import Thread
 
 import flask
 
-from unplugged import constants, controller, daemon, docker, initializer
+from unplugged import constants, controller, docker, initializer, loop
 
 log_filename = "logs/logs.log"
 os.makedirs(os.path.dirname(log_filename), exist_ok=True)
@@ -19,16 +19,13 @@ logging.basicConfig(
 def make_ip(ip_ending) -> str:
     return f'{constants.NETWORK_IP}.{ip_ending}'
 
-
-thread_ = Thread(target=daemon.main)
+initializer.initialize()  # To ensure the GUI starts up properly
+thread_ = Thread(target=loop.main)
 thread_.start()
-
-initializer.initialize()
-
+app = flask.Flask(__name__)
 HOST = make_ip(ip_ending=docker.unplugged.ip_ending)
 PORT = docker.unplugged.port
 
-app = flask.Flask(__name__)
 
 @app.template_filter('tojson')  # Needed for commit() call in index.html
 def tojson_filter(value):
@@ -41,7 +38,6 @@ def index():
         'index.html',
         JIGS=constants.JIGS,
         USERS=constants.USERS,
-        VOLTAGE_RANGES=constants.VOLTAGE_RANGES,
         STATUS=constants.STATUS,
         META=controller.load_most_recent_meta(),
         TIMESTAMPS=controller.load_most_recent_timestamps(),

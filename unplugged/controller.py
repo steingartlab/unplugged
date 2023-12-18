@@ -19,6 +19,12 @@ def load_most_recent_meta() -> dict:
     for jig_name in constants.JIGS:
         if jig_name not in meta:
             meta[jig_name] = initializer.DUMMY_INITIAL_METADATA["jig"]
+        
+        for key, val in meta[jig_name].items():
+            if val is not None:
+                continue
+            print(f'setting default value for {jig_name=}, {key=}')
+            meta[jig_name][key] = initializer.DUMMY_INITIAL_METADATA["jig"][key]
 
     return meta
 

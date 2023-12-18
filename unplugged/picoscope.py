@@ -23,7 +23,7 @@ class Picoscope:
     delay: float
     duration: float
     voltage_range: float
-    avg_num: int = 64
+    avg_num: int = 32
 
 
 def callback(pulsing_params: Picoscope) -> Dict[str, List[float]]:
@@ -37,6 +37,6 @@ def callback(pulsing_params: Picoscope) -> Dict[str, List[float]]:
             acoustics pulse data.
     """
 
-    response = requests.post(URL, data=asdict(pulsing_params)).text
+    response = requests.post(URL, data=asdict(pulsing_params), timeout=constants.PICOSCOPE_TIMEOUT_S).text
     
     return json.loads(response) 
