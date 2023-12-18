@@ -3,7 +3,6 @@ executed in turn.
 """
 
 from time import sleep, time
-import traceback
 
 from unplugged import constants
 
@@ -16,7 +15,6 @@ from unplugged import (
     picoscope,
     pulse,
     pulser,
-    slack
 )
 
 
@@ -26,6 +24,9 @@ def _loop(jig: boilerplate.Jig):
 
     payload = {'time': time()}
     payload['waveform'] = pulse.pulse(jig.mode)
+
+    if payload['waveform'] is None:
+        return
 
     if jig.status == boilerplate.Status.pulsing:
         figure.plot(waveform=payload['waveform'], jig=jig)
@@ -70,12 +71,6 @@ def main():
     """
 
     while True:
-        try:
-            print('external loop')
-            loop()
-            sleep(constants.SLEEP_BETWEEN_LOOPS_S)
-        except Exception as e:
-            traceback_details = traceback.format_exc()
-            print(traceback_details)
-            slack.post(message=f"Unplugged: ```{traceback_details}```")
-            continue
+        print('external loop')
+        loop()
+        sleep(constants.SLEEP_BETWEEN_LOOPS_S)
