@@ -24,6 +24,13 @@
                     signal parameters. Set to "running" when experiment should start. Don't forget to click
                     "commit"!</span>
             </th>
+            <th class="tooltip" title="color">
+                indicator
+                <span class="tooltiptext">Set to "idling" when you want to stop. Set to "pulse" when you want to test
+                    signal parameters. Set to "running" when experiment should start. Don't forget to click
+                    "commit"!</span>
+            </th>
+
             <th class="tooltip" title="since">
                 t since updated [s]
                 <span class="tooltiptext">Time elapsed since a pulse was last recorded on this jig</span>
@@ -80,6 +87,17 @@
                     {% endfor %}
                 </select>
             </td>
+            <td>
+                {% for status in STATUS %}
+                {% if data['status'] == 'idling' %}
+                <span class="circle red"></span>
+                {% elif data['status'] == 'pulsing' %}
+                <span class="circle yellow"></span>
+                {% elif data['status'] == 'running' %}
+                <span class="circle green"></span>
+                {% endif %}
+                {% endfor %}
+            </td>
             <td>{{TIMESTAMPS[jig]}}</td>
             <td>
                 <select name="{{ jig }}_user">
@@ -93,9 +111,9 @@
             <td><input type="number" name="{{ jig }}_duration" value="{{ data['duration'] }}"></td>
             <td><input type="number" name="{{ jig }}_gain_dB" value="{{ data['gain_dB'] }}"></td>
             <td><input type="number" name="{{ jig }}_mux_module" value="{{ data['mux_module'] }}"></td>
-	    <td><input type="number" name="{{ jig }}_mux_row" value="{{ data['mux_row'] }}"></td>
-	    <td><input type="number" name="{{ jig }}_mode" value="{{ data['mode'] }}"></td>
-	    {% endfor %}
+            <td><input type="number" name="{{ jig }}_mux_row" value="{{ data['mux_row'] }}"></td>
+            <td><input type="number" name="{{ jig }}_mode" value="{{ data['mode'] }}"></td>
+            {% endfor %}
         </tr>
 
     </tbody>

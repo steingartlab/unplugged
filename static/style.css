@@ -30,6 +30,27 @@ th {
     color: white;
 }
 
+/* Add this CSS code to style the colored circles */
+.circle {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.red {
+    background-color: red;
+}
+
+.yellow {
+    background-color: yellow;
+}
+
+.green {
+    background-color: green;
+}
+
 tr:nth-child(even) {
     background-color: #f2f2f2;
 }
